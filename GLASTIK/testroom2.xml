@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<map>
+	<name>Test Room 2</name>
+	<width>7</width>
+	<height>9</height>
+	<texturefile>testroom.sps</texturefile>
+	<spawns>
+		<spawn>
+			<x>0.0</x>
+			<y>0.0</y>
+		</spawn>
+		<spawn>
+			<x>128.0</x>
+			<y>128.0</y>
+		</spawn>
+	</spawns>
+	<entities>
+		
+	</entities>
+	<tiles>
+		16 16 16 16 16 16 16
+		16 0  0  0  0  0  16
+		16 0  0  0  0  0  16
+		16 0  0  0  0  0  16
+		16 0  0  0  0  0  16
+		16 0  0  0  0  0  16
+		16 0  0  0  0  0  16
+		16 0  0  0  0  0  16
+		16 16 16 16 16 16 16
+	</tiles>
+</map>
