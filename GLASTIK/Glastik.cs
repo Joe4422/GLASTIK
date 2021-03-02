@@ -10,7 +10,6 @@ namespace GLASTIK
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private BindingManager inputManager;
-        private GameData gameData;
 
         public Glastik()
         {
@@ -23,7 +22,9 @@ namespace GLASTIK
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            GameConsole.GameConsole.Log.LogStatus("Initialising...");
+            GameData.Console = new WebConsole();
+
+            GameData.Console.LogStatus("Initialising...");
             inputManager = new();
             BasePlayer.Input = inputManager;
             BaseController.Input = inputManager;
@@ -33,17 +34,15 @@ namespace GLASTIK
 
         protected override void LoadContent()
         {
-            GameConsole.GameConsole.Log.LogStatus("Loading game content...");
+            GameData.Console.LogStatus("Loading game content...");
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            gameData = new(_graphics.GraphicsDevice, Services, _spriteBatch, Content);
-            Level.GameData = gameData;
-            ConsoleCommands.GameData = gameData;
+            GameData.SetGameData(_graphics.GraphicsDevice, Services, _spriteBatch, Content);
 
-            if (gameData.LevelManager.LoadLevel("testroom.xml") == false)
+            if (GameData.LevelManager.LoadLevel("testroom.xml") == false)
             {
-                GameConsole.GameConsole.Log.LogError("Could not load level!");
+                GameData.Console.LogError("Could not load level!");
             }
 
             // TODO: use this.Content to load your game content here
@@ -53,9 +52,11 @@ namespace GLASTIK
         {
             // TODO: Add your update logic here
             inputManager.Tick();
-            gameData.LevelManager.CurrentLevel?.Tick();
+            GameData.LevelManager.CurrentLevel?.Tick();
 
             if (inputManager.Menu.Pressed) Exit();
+
+            if (inputManager.ShowConsole.Pressed) GameData.Console.FocusConsole();
 
             base.Update(gameTime);
         }
@@ -64,7 +65,7 @@ namespace GLASTIK
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            gameData.LevelManager.CurrentLevel?.Draw();
+            GameData.LevelManager.CurrentLevel?.Draw();
 
             // TODO: Add your drawing code here
 

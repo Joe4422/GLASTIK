@@ -18,7 +18,6 @@ namespace GLASTIK
     {
         public EntityManager EntityManager { get; }
         protected TextureManager spriteManager;
-        public static GameData GameData { get; set; }
 
         public BasePlayer Player { get; private set; }
         public double Scale { get; set; } = 1.0;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -33,15 +35,13 @@ namespace GLASTIK.GameConsole
             }
         }
 
-        public static GameData GameData { get; set; }
-
         public static ConsoleCommand[] Commands { get; }
 
         static ConsoleCommands()
         {
             List<ConsoleCommand> commands = new();
 
-            foreach (var method in typeof(ConsoleCommands).GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic))
+            foreach (var method in typeof(ConsoleCommands).GetMethods(BindingFlags.Static | BindingFlags.NonPublic))
             {
                 foreach (var att in method.GetCustomAttributes(false))
                 {
@@ -61,13 +61,13 @@ namespace GLASTIK.GameConsole
         {
             if (args.Length != 2)
             {
-                GameConsole.Log.PrintLine("Invalid arguments.");
+                GameData.Console.PrintLine("Invalid arguments.");
                 return;
             }
 
             if (!GameData.LevelManager.LoadLevel(args[1]))
             {
-                GameConsole.Log.PrintLine($"Cannot find level {args[1]}.");
+                GameData.Console.PrintLine($"Cannot find level {args[1]}.", IGameConsole.MessageType.Warning);
                 return;
             }
         }
@@ -77,14 +77,13 @@ namespace GLASTIK.GameConsole
         {
             if (args.Length != 1)
             {
-                GameConsole.Log.PrintLine("Invalid arguments.");
+                GameData.Console.PrintLine("Invalid arguments.");
                 return;
             }
 
             foreach (string level in GameData.LevelManager.Levels)
             {
-                GameConsole.Log.PrintLine($" - {level}");
-                return;
+                GameData.Console.PrintLine($" - {level}");
             }
         }
 
@@ -93,21 +92,20 @@ namespace GLASTIK.GameConsole
         {
             if (args.Length != 1)
             {
-                GameConsole.Log.PrintLine("Invalid arguments.");
+                GameData.Console.PrintLine("Invalid arguments.");
                 return;
             }
 
             if (GameData.LevelManager.CurrentLevel == null)
             {
-                GameConsole.Log.PrintLine("No level loaded.");
+                GameData.Console.PrintLine("No level loaded.");
                 return;
             }
 
             int i = 0;
             foreach (BaseEntity entity in GameData.LevelManager.CurrentLevel.EntityManager.Entities)
             {
-
-                GameConsole.Log.PrintLine($"{i++}:{new string(' ', 6 - i.ToString().Length)}{entity}");
+                GameData.Console.PrintLine($"{i++}:{new string(' ', 6 - i.ToString().Length)}{entity}");
             }
         }
 
@@ -116,13 +114,13 @@ namespace GLASTIK.GameConsole
         {
             if (args.Length < 2)
             {
-                GameConsole.Log.PrintLine("Invalid arguments.");
+                GameData.Console.PrintLine("Invalid arguments.");
                 return;
             }
 
             if (GameData.LevelManager.CurrentLevel == null)
             {
-                GameConsole.Log.PrintLine("No level loaded.");
+                GameData.Console.PrintLine("No level loaded.");
                 return;
             }
 
@@ -130,13 +128,13 @@ namespace GLASTIK.GameConsole
 
             if (entity == null)
             {
-                GameConsole.Log.PrintLine($"No such entity with ID or name {args[1]}.");
+                GameData.Console.PrintLine($"No such entity with ID or name {args[1]}.", IGameConsole.MessageType.Warning);
                 return;
             }
 
             if (args.Length == 2)
             {
-                GameConsole.Log.PrintLine(entity.ToString());
+                GameData.Console.PrintLine(entity.ToString());
                 return;
             }
 
@@ -161,13 +159,13 @@ namespace GLASTIK.GameConsole
 
             if (entProperty == null)
             {
-                GameConsole.Log.PrintLine($"Unknown or un-modifiable property {args[2]}.");
+                GameData.Console.PrintLine($"Unknown or un-modifiable property {args[2]}.", IGameConsole.MessageType.Warning);
                 return;
             }
 
             if (args.Length == 3)
             {
-                GameConsole.Log.PrintLine(entProperty.GetValue(entity)?.ToString());
+                GameData.Console.PrintLine(entProperty.GetValue(entity)?.ToString());
                 return;
             }
             else if (args.Length == 4)
@@ -179,7 +177,7 @@ namespace GLASTIK.GameConsole
                     {
                         entProperty.SetValue(entity, Convert.ChangeType(parameters[1], entProperty.PropertyType));
                     }
-                    else GameConsole.Log.PrintLine("Invalid arguments.");
+                    else GameData.Console.PrintLine("Invalid arguments.");
                 }
                 else if (entProperty.PropertyType == typeof(Point2D))
                 {
@@ -187,13 +185,13 @@ namespace GLASTIK.GameConsole
 
                     if (split.Length != 2)
                     {
-                        GameConsole.Log.PrintLine("Invalid arguments.");
+                        GameData.Console.PrintLine("Invalid arguments.");
                     }
                     else
                     {
                         if (double.TryParse(split[0], out double x) == false || double.TryParse(split[1], out double y) == false)
                         {
-                            GameConsole.Log.PrintLine("Invalid arguments.");
+                            GameData.Console.PrintLine("Invalid arguments.");
                         }
                         else
                         {
@@ -217,7 +215,7 @@ namespace GLASTIK.GameConsole
 
                         if (other == null)
                         {
-                            GameConsole.Log.PrintLine($"Unknown entity {args[3]}.");
+                            GameData.Console.PrintLine($"Unknown entity {args[3]}.", IGameConsole.MessageType.Warning);
                         }
                         else
                         {
@@ -255,6 +253,26 @@ namespace GLASTIK.GameConsole
             {
                 return null;
             }
+        }
+
+        [ConsoleCommand("cs")]
+        private static void Command_Cs(string[] args)
+        {
+            string cs = string.Join(' ', args[1..]);
+
+            try
+            {
+                var result = CSharpScript.EvaluateAsync(cs, ScriptOptions.Default.WithImports("GLASTIK").AddReferences(typeof(GameData).Assembly)).Result;
+                GameData.Console.PrintLine($"{result}");
+            }
+            catch (CompilationErrorException e)
+            {
+                foreach (string s in e.Diagnostics.Select(x => x.ToString()))
+                {
+                    GameData.Console.PrintLine(s, IGameConsole.MessageType.Error);
+                }
+            }
+
         }
 
 #pragma warning restore IDE0051 // Remove unused private members

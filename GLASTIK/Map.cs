@@ -33,7 +33,7 @@ namespace GLASTIK
                 throw new FileNotFoundException("Could not find map file!", xmlPath);
             }
 
-            GameConsole.GameConsole.Log.LogDebug(1, $"Loading map {xmlPath}.");
+            GameData.Console.LogDebug($"Loading map {xmlPath}.", 1);
 
             string name;
             uint width, height;

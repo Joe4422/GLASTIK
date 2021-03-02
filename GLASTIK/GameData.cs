@@ -11,16 +11,17 @@ using GLASTIK.GameConsole;
 
 namespace GLASTIK
 {
-    public class GameData
+    public static class GameData
     {
-        public GraphicsDevice GraphicsDevice { get; }
-        public IServiceProvider ServiceProvider { get; }
-        public SpriteBatch SpriteBatch { get; }
-        public ContentManager ContentManager { get; }
-        public TextureManager EntitySpriteManager { get; }
-        public LevelManager LevelManager { get; }
+        public static GraphicsDevice GraphicsDevice { get; private set; }
+        public static IServiceProvider ServiceProvider { get; private set; }
+        public static SpriteBatch SpriteBatch { get; private set; }
+        public static ContentManager ContentManager { get; private set; }
+        public static TextureManager EntitySpriteManager { get; private set; }
+        public static LevelManager LevelManager { get; private set; }
+        public static IGameConsole Console { get; set; }
 
-        public GameData(GraphicsDevice graphicsDevice, IServiceProvider serviceProvider, SpriteBatch spriteBatch, ContentManager contentManager)
+        public static void SetGameData(GraphicsDevice graphicsDevice, IServiceProvider serviceProvider, SpriteBatch spriteBatch, ContentManager contentManager)
         {
             GraphicsDevice = graphicsDevice;
             ServiceProvider = serviceProvider;
@@ -35,7 +36,7 @@ namespace GLASTIK
             }
             catch (FileNotFoundException e)
             {
-                GameConsole.GameConsole.Log.LogError($"Could not find entity sprite file at {e.FileName}!");
+                Console.LogError($"Could not find entity sprite file at {e.FileName}!");
             }
 
             try
@@ -44,7 +45,7 @@ namespace GLASTIK
             }
             catch (DirectoryNotFoundException e)
             {
-                GameConsole.GameConsole.Log.LogError($"Could not find map directory {e.Message}!");
+                Console.LogError($"Could not find map directory {e.Message}!");
             }
         }
     }

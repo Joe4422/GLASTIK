@@ -35,7 +35,7 @@ namespace GLASTIK
                 if (missingTextureLogged.ContainsKey(index) == false)
                 {
                     missingTextureLogged[index] = true;
-                    GameConsole.GameConsole.Log.LogWarning($"Texture requested at {index} - not specified in file {textureFile}.");
+                    GameData.Console.LogWarning($"Texture requested at {index} - not specified in file {textureFile}.");
                 }
 
                 return null;
@@ -84,20 +84,20 @@ namespace GLASTIK
 
                     if (ushort.TryParse(parts[0], out ushort result) == false)
                     {
-                        GameConsole.GameConsole.Log.LogError($"Invalid index {parts[0]} in texture file {textureFile} at line {lineNum}.");
+                        GameData.Console.LogError($"Invalid index {parts[0]} in texture file {textureFile} at line {lineNum}.");
                     }
                     else
                     {
                         try
                         {
                             Texture2D tex = content.Load<Texture2D>(parts[1]);
-                            if (textures.ContainsKey(result)) GameConsole.GameConsole.Log.LogWarning($"Overwriting texture {textures[result].Name} at index {result} with texture {parts[1]}.");
+                            if (textures.ContainsKey(result)) GameData.Console.LogWarning($"Overwriting texture {textures[result].Name} at index {result} with texture {parts[1]}.");
                             textures[result] = tex;
-                            GameConsole.GameConsole.Log.LogDebug(0, $"Loaded texture {parts[1]} at index {result}.");
+                            GameData.Console.LogDebug($"Loaded texture {parts[1]} at index {result}.", 1);
                         }
                         catch (Exception)
                         {
-                            GameConsole.GameConsole.Log.LogError($"Failed to load texture {parts[1]}. (from {textureFile} at line {lineNum})");
+                            GameData.Console.LogError($"Failed to load texture {parts[1]}. (from {textureFile} at line {lineNum})");
                         }
                     }
 

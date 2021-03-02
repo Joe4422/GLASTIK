@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30626.31
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLASTIK", "GLASTIK\GLASTIK.csproj", "{91D1E50A-7DC5-4DB7-9C53-6CAB9581D867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GLASTIK", "GLASTIK\GLASTIK.csproj", "{91D1E50A-7DC5-4DB7-9C53-6CAB9581D867}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GLASCon", "GLASCon\GLASCon.csproj", "{DDFD9705-6868-485F-8957-5AEBD1D1657E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLASTIK_Core", "GLASTIK_Core\GLASTIK_Core.csproj", "{ABB31E83-1929-4C1A-9AEC-496C32E7154E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{91D1E50A-7DC5-4DB7-9C53-6CAB9581D867}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91D1E50A-7DC5-4DB7-9C53-6CAB9581D867}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91D1E50A-7DC5-4DB7-9C53-6CAB9581D867}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDFD9705-6868-485F-8957-5AEBD1D1657E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDFD9705-6868-485F-8957-5AEBD1D1657E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDFD9705-6868-485F-8957-5AEBD1D1657E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDFD9705-6868-485F-8957-5AEBD1D1657E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABB31E83-1929-4C1A-9AEC-496C32E7154E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB31E83-1929-4C1A-9AEC-496C32E7154E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB31E83-1929-4C1A-9AEC-496C32E7154E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB31E83-1929-4C1A-9AEC-496C32E7154E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

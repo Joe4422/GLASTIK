@@ -13,23 +13,25 @@ namespace GLASTIK
 {
     namespace GameConsole
     {
-        public static class GameConsole
+        public class TerminalConsole : IGameConsole
         {
-            public static Logger Log { get; private set; }
+            private Logger log;
 
-            private static TextField tf;
+            private TextField tf;
 
             private const int previousCommandCount = 64;
-            private static string[] previousCommands = new string[previousCommandCount];
-            private static int lastCommandIndicator = 0;
-            private static int currentLastCommandIndicator = 0;
+            private string[] previousCommands = new string[previousCommandCount];
+            private int lastCommandIndicator = 0;
+            private int currentLastCommandIndicator = 0;
 
-            static GameConsole()
+            public uint DebugLevel { get; set; } = 5;
+
+            public TerminalConsole()
             {
                 InitGui();
             }
 
-            private static void InitGui()
+            private void InitGui()
             {
                 Application.Init();
                 Toplevel top = Application.Top;
@@ -44,14 +46,14 @@ namespace GLASTIK
                 };
                 top.Add(win);
 
-                Log = new()
+                log = new()
                 {
                     X = 0,
                     Y = 0,
                     Width = Dim.Fill(),
                     Height = Dim.Fill()
                 };
-                win.Add(Log);
+                win.Add(log);
 
                 tf = new()
                 {
@@ -69,7 +71,7 @@ namespace GLASTIK
                 thread.Start();
             }
 
-            private static void Tf_KeyPress(View.KeyEventEventArgs obj)
+            private void Tf_KeyPress(View.KeyEventEventArgs obj)
             {
                 if (obj.KeyEvent.Key == Key.Enter && tf.Text.ToString().Trim() != "")
                 {
@@ -77,7 +79,7 @@ namespace GLASTIK
 
                     tf.Text = "";
 
-                    Log.PrintLine("> " + input);
+                    PrintLine("> " + input);
 
                     string[] split = input.ToString().Split(" ", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
@@ -89,7 +91,7 @@ namespace GLASTIK
                     }
                     catch (Exception)
                     {
-                        Log.PrintLine("Invalid command.");
+                        PrintLine("Invalid command.");
                         return;
                     }
                     finally
@@ -144,6 +146,35 @@ namespace GLASTIK
 
                     tf.CursorPosition = tf.Text.Length;
                 }
+            }
+
+            public void FocusConsole()
+            {
+            }
+
+            public void LogStatus(string message)
+            {
+                log.LogStatus(message);
+            }
+
+            public void LogWarning(string message)
+            {
+                log.LogWarning(message);
+            }
+
+            public void LogError(string message)
+            {
+                log.LogError(message);
+            }
+
+            public void LogDebug(string message, uint level = 0)
+            {
+                log.LogDebug(level, message);
+            }
+
+            public void PrintLine(string line, IGameConsole.MessageType messageType = IGameConsole.MessageType.Print)
+            {
+                log.PrintLine(line);
             }
         }
     }

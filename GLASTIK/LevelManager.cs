@@ -33,7 +33,7 @@ namespace GLASTIK
         {
             Map map;
 
-            GameConsole.GameConsole.Log.LogStatus($"Loading level at path {path}.");
+            GameData.Console.LogStatus($"Loading level at path {path}.");
 
             if (Path.HasExtension(path) == false)
             {
@@ -58,7 +58,7 @@ namespace GLASTIK
 
             CurrentLevel = new(map);
 
-            GameConsole.GameConsole.Log.LogStatus("Level load completed.");
+            GameData.Console.LogStatus("Level load completed.");
 
             return true;
         }

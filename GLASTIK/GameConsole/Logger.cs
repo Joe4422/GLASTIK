@@ -45,17 +45,6 @@ namespace GLASTIK.GameConsole
             Normal = new(Color.BrightGreen)
         };
 
-        public Logger()
-        {
-            Thread redrawThread = new(() =>
-            {
-                Thread.Sleep(100);
-            });
-
-            redrawThread.IsBackground = true;
-            redrawThread.Start();
-        }
-
         public override void Redraw(Rect bounds)
         {
             base.Redraw(bounds);
@@ -119,12 +108,11 @@ namespace GLASTIK.GameConsole
             if (messageIndex >= messageCount) messageIndex = 0;
 
             typeof(Application).GetMethod("TerminalResized", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, null);
-
         }
 
         private void Log(LogType logType, string message)
         {
-            string caller = new StackTrace().GetFrame(2).GetMethod().DeclaringType.Name;
+            string caller = new StackTrace().GetFrame(3).GetMethod().DeclaringType.Name;
 
             char prepend = logType switch
             {
